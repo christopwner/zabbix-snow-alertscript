@@ -26,15 +26,17 @@ details=$5
 
 # hardcoded for convenience
 category='Software/Application'
-affected_ci='NetSuite - Enterprise BI'
+affected_ci='8b50e76c1304e2809165f8fed144b03b'
 division='Corporate'
-orig_group='iHM-IT Monitoring and Reporting (SNC)'
+assign_group='85b10cf00a0a3c87017fb2c2d689f690'
+orig_group='85b10c080a0a3c8701846af226e693c5'
 
 json='{
     "category":"'${category}'",
     "cmdb_ci":"'${affected_ci}'",
     "u_division":"'${division}'",
     "u_originating_group":"'${orig_group}'",
+    "assignment_group":"'${assign_group}'",
     "short_description":"'${summary}'",
     "description":"'${details}'"
 }'
