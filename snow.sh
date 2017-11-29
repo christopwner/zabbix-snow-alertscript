@@ -23,6 +23,7 @@ user=$2
 pass=$3
 summary=$4
 details=$5
+id=$6
 
 # hardcoded for convenience
 category='Software/Application'
@@ -31,14 +32,39 @@ division='Corporate'
 assign_group='85b10cf00a0a3c87017fb2c2d689f690'
 orig_group='85b10c080a0a3c8701846af226e693c5'
 
-json='{
-    "category":"'${category}'",
-    "cmdb_ci":"'${affected_ci}'",
-    "u_division":"'${division}'",
-    "u_originating_group":"'${orig_group}'",
-    "assignment_group":"'${assign_group}'",
-    "short_description":"'${summary}'",
-    "description":"'${details}'"
-}'
+#directory to store id/user for events
+dir="/tmp"
 
-curl -u "${user}:${pass}" -H "Content-Type: application/json" "${url}/api/now/table/incident" -d "${json}"
+# determine if new problem or resolution
+if [[ "$summary" = "Resolved"* ]]; then
+    # parse stored event_id->sys_id and event_id->sys_user
+    sys_id=$(cat ${dir}/${id}.id)
+    sys_user=$(cat ${dir}/${id}.user)
+    json='{
+        "state": "6",
+        "close_code": "Resolved by Requester",
+        "close_notes": "Resolved",
+        "closed_by": {
+            "link": "'${url}'/api/now/table/sys_user/'${sys_user}'",
+            "value": "'${sys_user}'"
+        }
+    }'
+
+    # post resolution and remove stored values
+    curl -s -X PUT -u "${user}:${pass}" -H "Content-Type: application/json" "${url}/api/now/table/incident/${sys_id}" -d "${json}" > /dev/null
+    rm ${dir}/${id}.id
+    rm ${dir}/${id}.user
+elif [[ "$summary" = "Problem"* ]]; then
+    json='{
+        "category":"'${category}'",
+        "cmdb_ci":"'${affected_ci}'",
+        "u_division":"'${division}'",
+        "u_originating_group":"'${orig_group}'",
+        "assignment_group":"'${assign_group}'",
+        "short_description":"'${summary}'",
+        "description":"'${details}'"
+    }'
+    response=$(curl -s -u "${user}:${pass}" -H "Content-Type: application/json" "${url}/api/now/table/incident" -d "${json}")
+    echo ${response} | jq -r '.[] | .sys_id' >> ${dir}/${id}.id
+    echo ${response} | jq -r '.[] | .opened_by["value"]' >> ${dir}/${id}.user
+fi

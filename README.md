@@ -8,3 +8,7 @@ Requires the following parameters (config in Zabbix during custom media type set
 * pass
 * {ALERT.SUBJECT}
 * {ALERT.MESSAGE}
+* {EVENT.ID}
+
+## Requirements
+* [jq](https://stedolan.github.io/jq/)
