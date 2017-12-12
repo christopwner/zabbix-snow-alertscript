@@ -9,6 +9,7 @@ Requires the following parameters (config in Zabbix during custom media type set
 * {ALERT.SUBJECT}
 * {ALERT.MESSAGE}
 * {EVENT.ID}
+* {TRIGGER.NSEVERITY}
 
 ## Requirements
 * [jq](https://stedolan.github.io/jq/)
