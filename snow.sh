@@ -24,6 +24,9 @@ pass=$3
 summary=$4
 details=$5
 
+#remove carriage returns
+details=$(echo $details | tr -d '\015')
+
 # hardcoded for convenience
 category='Software/Application'
 affected_ci='8b50e76c1304e2809165f8fed144b03b'
