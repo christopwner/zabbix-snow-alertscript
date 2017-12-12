@@ -24,6 +24,7 @@ pass=$3
 summary=$4
 details=$5
 id=$6
+severity=$7
 
 # hardcoded for convenience
 category='Software/Application'
@@ -34,6 +35,9 @@ orig_group='85b10c080a0a3c8701846af226e693c5'
 
 #directory to store id/user for events
 dir="/tmp"
+
+#map severity to priority
+let "priority = 6 - $severity"
 
 # determine if new problem or resolution
 if [[ "$summary" = "Resolved"* ]]; then
@@ -62,7 +66,8 @@ elif [[ "$summary" = "Problem"* ]]; then
         "u_originating_group":"'${orig_group}'",
         "assignment_group":"'${assign_group}'",
         "short_description":"'${summary}'",
-        "description":"'${details}'"
+        "description":"'${details}'",
+        "priority":"'${priority}'"
     }'
     response=$(curl -s -u "${user}:${pass}" -H "Content-Type: application/json" "${url}/api/now/table/incident" -d "${json}")
     echo ${response} | jq -r '.[] | .sys_id' >> ${dir}/${id}.id
