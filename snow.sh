@@ -24,7 +24,6 @@ pass=$3
 summary=$4
 details=$5
 id=$6
-severity=$7
 
 # hardcoded for convenience
 category='Software/Application'
@@ -35,9 +34,6 @@ orig_group='85b10c080a0a3c8701846af226e693c5'
 
 #directory to store id/user for events
 dir="/tmp"
-
-#map severity to priority
-let "priority = 6 - $severity"
 
 # determine if new problem or resolution
 if [[ "$summary" = "Resolved"* ]]; then
@@ -59,6 +55,12 @@ if [[ "$summary" = "Resolved"* ]]; then
     rm ${dir}/${id}.id
     rm ${dir}/${id}.user
 elif [[ "$summary" = "Problem"* ]]; then
+    #get nseverity token from summary and map to priority
+    tokens=( $summary )
+    severity=${tokens[1]}
+    let "priority = 6 - $severity"
+    
+    #setup json payload
     json='{
         "category":"'${category}'",
         "cmdb_ci":"'${affected_ci}'",
@@ -69,6 +71,8 @@ elif [[ "$summary" = "Problem"* ]]; then
         "description":"'${details}'",
         "priority":"'${priority}'"
     }'
+
+    #post payload and store event's sys_id and sys_user in response
     response=$(curl -s -u "${user}:${pass}" -H "Content-Type: application/json" "${url}/api/now/table/incident" -d "${json}")
     echo ${response} | jq -r '.[] | .sys_id' >> ${dir}/${id}.id
     echo ${response} | jq -r '.[] | .opened_by["value"]' >> ${dir}/${id}.user
