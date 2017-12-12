@@ -8,10 +8,9 @@ Requires the following parameters (config in Zabbix during custom media type set
 * pass
 * {ALERT.SUBJECT}
 * {ALERT.MESSAGE}
-* {EVENT.ID}
 
-Must modify default subject in action to include {TRIGGER.NSEVERITY} as this macro is unavailable through media type. Should look like the following:
-> Problem {TRIGGER.NSEVERITY} : {TRIGGER.NAME}
+Must modify default subject in action to include {TRIGGER.NSEVERITY} and {EVENT.ID} as these macros are unavailable through media type. Should look like the following:
+> Problem {TRIGGER.NSEVERITY} : {EVENT.ID} {TRIGGER.NAME}
 
 ## Requirements
 * [jq](https://stedolan.github.io/jq/)

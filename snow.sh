@@ -23,7 +23,6 @@ user=$2
 pass=$3
 summary=$4
 details=$5
-id=$6
 
 # hardcoded for convenience
 category='Software/Application'
@@ -34,6 +33,12 @@ orig_group='85b10c080a0a3c8701846af226e693c5'
 
 #directory to store id/user for events
 dir="/tmp"
+
+#get event.id and trigger.nseverity from tokenized summary
+tokens=( $summary )
+severity=${tokens[1]}
+id=${tokens[3]}
+let "priority = 6 - $severity"
 
 # determine if new problem or resolution
 if [[ "$summary" = "Resolved"* ]]; then
@@ -55,11 +60,6 @@ if [[ "$summary" = "Resolved"* ]]; then
     rm ${dir}/${id}.id
     rm ${dir}/${id}.user
 elif [[ "$summary" = "Problem"* ]]; then
-    #get nseverity token from summary and map to priority
-    tokens=( $summary )
-    severity=${tokens[1]}
-    let "priority = 6 - $severity"
-    
     #setup json payload
     json='{
         "category":"'${category}'",
