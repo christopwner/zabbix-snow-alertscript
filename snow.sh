@@ -72,7 +72,8 @@ elif [[ "$summary" = "Problem"* ]]; then
         "assignment_group":"'${assign_group}'",
         "short_description":"'${summary}'",
         "description":"'${details}'",
-        "priority":"'${priority}'"
+        "priority":"'${priority}'",
+        "contact_type":"Alert"
     }'
 
     #post payload and store event's sys_id and sys_user in response
