@@ -16,5 +16,8 @@ Must modify default subject in action to include {TRIGGER.NSEVERITY} and {EVENT.
 
 Carriage returns are usually added to the default message but will be removed by this script. Consider adding semi-colons or another delimiter between fields.
 
+## Priority
+Priority is calculated based on urgency/impact and will impact downstream processes if set directly. We opted to set urgency to 1 for every alert and map trigger severity to impact.
+
 ## Requirements
 * [jq](https://stedolan.github.io/jq/)

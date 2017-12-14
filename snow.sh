@@ -72,7 +72,8 @@ elif [[ "$summary" = "Problem"* ]]; then
         "assignment_group":"'${assign_group}'",
         "short_description":"'${summary}'",
         "description":"'${details}'",
-        "priority":"'${priority}'",
+        "impact":"'${priority}'",
+        "urgency":"1",
         "contact_type":"Alert"
     }'
 
